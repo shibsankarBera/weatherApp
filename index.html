@@ -14,21 +14,19 @@
     />
   </head>
   <body
-    class="min-h-screen bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-400 "
+    class="min-h-screen bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-400 flex flex-col items-center "
   >
     <!-- //1// Header //////////-->
     <header
-      class="w-full bg-sky-500 text-center py-4 text-white text-3xl font-semibold tracking-wide"
+      class="w-full text-center py-4 text-white text-3xl font-semibold tracking-wide"
     >
       Weather Dashboard
     </header>
 
     <!-- //2//  Main Container  /////// -->
-    <div class="">
-      <h1>main</h1>
+    <div class="w-full max-w-6xl px-4 md:px-8">
       <!--=2.1========== dashbord secrtion ========== -->
-      <div class="">
-        <h1>dashbord</h1>
+      <div class="flex flex-col md:flex-row gap-6">
         <!-- 2.1.1------- Search Section ------- -->
         <div class="w-full md:w-2/5 bg-white/20 backdrop-blur-lg mx-auto p-3 md:p-6 rounded-2xl shadow-xl text-white">
           <h2 class="text-lg font-semibold mb-4">Search City</h2>
@@ -58,7 +56,7 @@
         <div id="currentWeather" class="w-full md:w-3/5 bg-white/20 backdrop-blur-xl text-white rounded-3xl shadow-2xl p-6 ">
           <!-- Date Row -->
           <div class="flex justify-between text-sm opacity-80 mb-6">
-            <span>August 27</span>
+            <span>27August,2025</span>
             <span>Monday</span>
             <span>11:48 am</span>
           </div>
@@ -99,12 +97,12 @@
 
       <!--=2.2======= 5Day Forecast Section ====== -->
       <h2 class="text-white text-2xl mt-10 mb-4">5 Day Forecast</h2>
-      <div class="grid grid-cols-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <!-- Forecast Cards -->
         <!-- ~~~~~ Day 1 ~~~~ -->
-        <div class="bg-white/20  backdrop-blur-lg rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg">
-          <p class="text-sm md:text-xl opacity-80 ">THU</p>
-          <p class="text-3xl my-2 ">⛈️</p>
+        <div class="bg-white/20 flex items-center justify-around md:grid grid-cols-2 lg:block backdrop-blur-lg rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg">
+          <p class="text-sm col-span-2 md:text-xl opacity-80 ">THU</p>
+          <p class="text-3xl md:text-4xl col-span-2 my-2 ">⛈️</p>
           <p class="text-sm">27°C</p>
           <p class="text-xs opacity-70">Wind 4 m/s</p>
         </div>

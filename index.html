@@ -4,42 +4,114 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-  
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
+      integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
-  <body
-    class=" "
-  >
+  <body class=" ">
     <!-- //1// Header //////////-->
-    <header
-      class=""
-    >
-      Weather Dashboard
-    </header>
+    <header class="">Weather Dashboard</header>
 
     <!-- //2//  Main Container  /////// -->
     <div class="">
-        <h1>main </h1>
+      <h1>main</h1>
       <!--=2.1========== dashbord secrtion ========== -->
       <div class="">
         <h1>dashbord</h1>
         <!-- 2.1.1------- Search Section ------- -->
-        <div> search</div>
+        <div class="">
+          <h2 class="">Search City</h2>
+
+          <div class="flex gap-3">
+            <input
+              id="city_Input"
+              type="text"
+              placeholder="Enter city..."
+              class=" "
+            />
+            <button id="search_Btn" class="">
+              <i class="ri-search-line text-xl"></i>
+            </button>
+          </div>
+
+          <div class=" ">
+            <div class="">--</div>
+            <span class="">OR</span>
+            <div class="">--</div>
+          </div>
+
+          <button class="">Use Current Location</button>
+        </div>
 
         <!-- 2.1.2 --------Current Weather Card---- -->
-        <div
-          id="currentWeather"
-          class=""
-        >currentWeather
+        <h1>currentWeather</h1>
+        <div id="currentWeather" class=" ">
+          <!-- Date Row -->
+          <div class="">
+            <span>August 27</span>
+            <span>Monday</span>
+            <span>11:48 am</span>
+          </div>
+
+          <!-- Middle Section -->
+          <div class=" ">
+            <!-- Left -->
+            <div class=" ">
+              <p class=" ">Thunderstorm</p>
+
+              <h1 class="">
+                19°<span class=" ">C</span>
+                <span class=""> / 66°F</span>
+              </h1>
+
+              <div class=" ">
+                <p>🌬 Wind: 4-5 m/s</p>
+                <p>💧 Humidity: 40%</p>
+              </div>
+            </div>
+
+            <!-- Right -->
+            <div class="">
+              <div class=" ">
+                <img class=" " src=" " alt="Weather Icon" />
+              </div>
+
+              <div class="">
+                <p class="">London</p>
+                <p class="">
+                  <span>washington</span>,<span class=" ">uk</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!--=2.2======= 5Day Forecast Section ====== -->
       <h2 class="">5 Day Forecast</h2>
-      
+      <div class="">
+        <!-- Forecast Cards -->
+        <!-- ~~~~~ Day 1 ~~~~ -->
+        <div class="">
+          <p class="">THU</p>
+          <p class="">⛈️</p>
+          <p class="">27°C</p>
+          <p class="">Wind 4 m/s</p>
+        </div>
+        <!-- ~~~~~ Day 2 ~~~~ -->
+
+        <!-- ~~~~~ Day 3 ~~~~ -->
+
+        <!-- ~~~~~ Day 4 ~~~~ -->
+
+        <!-- ~~~~~ Day 5 ~~~~ -->
+      </div>
     </div>
 
-
-
-     <script src="weather.js"></script>
+    <script src="weather.js"></script>
   </body>
 </html>

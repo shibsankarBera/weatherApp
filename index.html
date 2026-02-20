@@ -55,42 +55,41 @@
         </div>
 
         <!-- 2.1.2 --------Current Weather Card---- -->
-        <h1>currentWeather</h1>
-        <div id="currentWeather" class=" ">
+        <div id="currentWeather" class="w-full md:w-3/5 bg-white/20 backdrop-blur-xl text-white rounded-3xl shadow-2xl p-6 ">
           <!-- Date Row -->
-          <div class="">
+          <div class="flex justify-between text-sm opacity-80 mb-6">
             <span>August 27</span>
             <span>Monday</span>
             <span>11:48 am</span>
           </div>
 
           <!-- Middle Section -->
-          <div class=" ">
+          <div class="flex items-center justify-between ">
             <!-- Left -->
-            <div class=" ">
-              <p class=" ">Thunderstorm</p>
+            <div class="w-1/2 ">
+              <p class="uppercase text-sm opacity-80 ">Thunderstorm</p>
 
-              <h1 class="">
-                19°<span class=" ">C</span>
-                <span class=""> / 66°F</span>
+              <h1 class="text-5xl md:text-6xl font-light mt-2">
+                19°<span class="text-xl ">C</span>
+                <span class="text-lg md:text-2xl"> / 66°F</span>
               </h1>
 
-              <div class=" ">
+              <div class=" mt-4 space-y-1 text-sm">
                 <p>🌬 Wind: 4-5 m/s</p>
                 <p>💧 Humidity: 40%</p>
               </div>
             </div>
 
             <!-- Right -->
-            <div class="">
-              <div class=" ">
-                <img class=" " src=" " alt="Weather Icon" />
+            <div class="w-1/2 flex flex-col items-center">
+              <div class="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center ">
+                <img class="w-full h-full object-contain drop-shadow-lg " src=" https://openweathermap.org/img/wn/50n@2x.png" alt="Weather Icon" />
               </div>
 
-              <div class="">
-                <p class="">London</p>
-                <p class="">
-                  <span>washington</span>,<span class=" ">uk</span>
+              <div class="text-center mt-3">
+                <p class="text-xl md:text-2xl font-semibold">London</p>
+                <p class="text-sm opacity-80">
+                  <span>washington</span>,<span class="uppercase ">uk</span>
                 </p>
               </div>
             </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="output.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
@@ -13,9 +13,15 @@
       referrerpolicy="no-referrer"
     />
   </head>
-  <body class=" ">
+  <body
+    class="min-h-screen bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-400 "
+  >
     <!-- //1// Header //////////-->
-    <header class="">Weather Dashboard</header>
+    <header
+      class="w-full bg-sky-500 text-center py-4 text-white text-3xl font-semibold tracking-wide"
+    >
+      Weather Dashboard
+    </header>
 
     <!-- //2//  Main Container  /////// -->
     <div class="">
@@ -24,28 +30,28 @@
       <div class="">
         <h1>dashbord</h1>
         <!-- 2.1.1------- Search Section ------- -->
-        <div class="">
-          <h2 class="">Search City</h2>
+        <div class="w-full md:w-2/5 bg-white/20 backdrop-blur-lg mx-auto p-3 md:p-6 rounded-2xl shadow-xl text-white">
+          <h2 class="text-lg font-semibold mb-4">Search City</h2>
 
           <div class="flex gap-3">
             <input
               id="city_Input"
               type="text"
               placeholder="Enter city..."
-              class=" "
+              class=" flex-1 px-4 md:px-1 py-2 rounded-xl bg-white/30 placeholder-white text-white focus:outline-none focus:ring-2 focus:ring-white "
             />
-            <button id="search_Btn" class="">
+            <button id="search_Btn" class="bg-white text-blue-600 px-4 rounded-xl font-medium hover:bg-blue-100 transition">
               <i class="ri-search-line text-xl"></i>
             </button>
           </div>
 
-          <div class=" ">
-            <div class="">--</div>
-            <span class="">OR</span>
-            <div class="">--</div>
+          <div class="my-2 flex  items-center ">
+            <div class="ml-4 grow border-t border-white/40"></div>
+            <span class="mx-4 text-sm opacity-70">OR</span>
+            <div class=" mr-4 grow border-t border-white/40"></div>
           </div>
 
-          <button class="">Use Current Location</button>
+          <button class="w-full bg-white/30 py-2 rounded-xl hover:bg-white/40 transition">Use Current Location</button>
         </div>
 
         <!-- 2.1.2 --------Current Weather Card---- -->

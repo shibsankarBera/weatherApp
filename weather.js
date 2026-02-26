@@ -1,26 +1,15 @@
 // ============================================== SELECT ELEMENTS ==============================================================
+import { API_key } from "./api.js";
 const cityInput = document.getElementById("city_Input"),
   searchBtn = document.getElementById("search_Btn"),
   locationBtn = document.getElementById("locationBtn"),
-  api_key = "8930bec60aaae2ab092dff58c1988c4a",
+  api_key = API_key,
   currentWeatherCard = document.getElementById("currentWeather");
    let inputDropdownBox=document.querySelector(".inputDropdownBox")
 
    // ==============================================    STATE/DATA  ============================================================
   let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
-
-
-// ================================================ UTILITIES & HELPER FUNCTIONS =============================================
-///---------Temparature in farenhite toogle-----
-function celcToFahr(n) {
-  return (n * 9.0) / 5.0 + 32.0;  
-}
-
-//-----------------------------------------------feth & displyaying weather Details---------------------
-function getWeatherDetails(name, lat, lon, country, state) {
-  let WEATHR_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`,
-    FORCAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key}`,
-    days = [
+ let days = [
       "Sunday",
       "Monday",
       "Tuesday",
@@ -43,17 +32,57 @@ function getWeatherDetails(name, lat, lon, country, state) {
       "Nov",
       "Dec",
     ];
+  let isCelsius = true;
+let todayTempC = null;  
+let searchedPlace = {
+  name: "",
+  state: "",
+  country: "",
+};
 
-  fetch(WEATHR_API_URL)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("todays weather", data);
-      let date = new Date();
-      let tempC = (data.main.temp - 273.15).toFixed(0);
-      let tempF = celcToFahr(tempC).toFixed(0);
-      console.log(data.weather[0].description);
-      //Update current  weather UI section
-      currentWeatherCard.innerHTML = `
+
+
+// ================================================ UTILITIES & HELPER FUNCTIONS =============================================
+///---------Celcious To Farenhite toogleButton-----
+function toggleTodayTemp() {
+  const tempVar = document.querySelector(".tempVar");
+  const circle = document.getElementById("circle");
+  const statusText = document.getElementById("statusText");
+
+  if (!todayTempC) return;
+
+  if (isCelsius) {
+    const tempF = (todayTempC * 9) / 5 + 32;
+
+    tempVar.innerHTML = `${tempF.toFixed(0)}°<sup class="text-3xl font-medium">F</sup>`;
+
+    circle.classList.replace("left-11", "left-1");
+    statusText.textContent = "°C";
+    isCelsius = false;
+  } else {
+    tempVar.innerHTML = `${todayTempC}°<sup class="text-3xl font-medium">C</sup>`;
+
+    circle.classList.replace("left-1", "left-11");
+    statusText.textContent = "°F";
+    isCelsius = true;
+  }
+}
+
+// =============================================  UI FUNCTIONS ===============================================
+        //DASHBOARD UI UPDATE
+function displayWeatherDashbord({
+  tempC,
+  desc,
+  icon,
+  wind,
+  humidity,
+  selectedDate,
+}) {
+  const date = new Date(selectedDate);
+  const now = new Date();
+  const isToday = now.getDate() === date.getDate();
+ 
+   currentWeatherCard.innerHTML = `
           <!-- Date Row -->
           <div class="flex justify-between text-sm opacity-80 mb-6">
             <span>${date.getDate()}th${months[date.getMonth()]} ,${date.getFullYear()} </span>
@@ -66,16 +95,28 @@ function getWeatherDetails(name, lat, lon, country, state) {
 
             <!-- Left -->
             <div class="w-1/2">
-              <p class="uppercase text-sm opacity-80">${data.weather[0].description}</p>
+              <p class="uppercase text-sm opacity-80">${desc}</p>
 
-              <h1 class="text-5xl md:text-6xl font-light mt-2">
-                ${tempC}°<span class="text-xl">C</span>
-                <span class="text-lg md:text-2xl"> / ${tempF}°F</span>
+             <h1 class="text-5xl md:text-6xl flex flex-col justify-center items-center font-light mt-2">
+               <span class="tempVar"> ${tempC}°<sup class="text-3xl font-medium">C</sup></span>
+               <span class="text-lg md:text-2xl">
+                  <div
+                   id="toggle"
+                   class="w-20 h-10 bg-gray-300 rounded-full relative border-2 border-purple-600 cursor-pointer transition duration-300"
+                  >
+                    <div
+                    id="circle"
+                    class="w-8 h-8 bg-white text-center rounded-full absolute top-1 left-11 transition-all duration-300 shadow-md"
+                    >
+                      <span id="statusText" class="text-gray-400 font-semibold">°F</span>
+                    </div>
+                  </div>
+               </span>
               </h1>
 
               <div class="mt-4 space-y-1 text-sm">
-                <p>Wind: ${data.wind.speed} m/s 💨</p>
-                <p>Humidity: ${data.main.humidity}% 💧</p>
+                <p>Wind: ${wind} m/s 💨</p>
+                <p>Humidity: ${humidity}% 💧</p>
               </div>
             </div>
 
@@ -86,22 +127,63 @@ function getWeatherDetails(name, lat, lon, country, state) {
               >
                 <img
                   class="w-full h-full object-contain drop-shadow-lg"
-                  src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+                  src="https://openweathermap.org/img/wn/${icon}@2x.png"
                   alt="Weather Icon"
                 />
               </div>
 
-              <div class="text-center mt-3">
-                <p class="text-xl md:text-2xl font-semibold">${name}</p>
-                <p class="text-sm opacity-80"><span>${state}</span>,<span class="uppercase">${country}</span></p>
-              </div>
+              ${
+                
+                searchedPlace.name  ? `<div class="text-center mt-3">
+                <p class="text-xl md:text-2xl font-semibold">${searchedPlace.name}</p>
+                <p class="text-sm opacity-80"><span>${searchedPlace.state || ""}</span>,<span class="uppercase">${searchedPlace.country || ""}</span></p>
+              </div>`
+                  : " "
+              }
             </div>
           </div>`;
+
+ 
+  if (isToday) {
+    const toggle = document.getElementById("toggle");
+    toggle.addEventListener("click", toggleTodayTemp);
+  }
+}
+
+//-----------------------------------------------feth & displyaying weather Details---------------------
+function getWeatherDetails(name, lat, lon, country, state) {
+  searchedPlace = { name, state, country }; 
+  let WEATHR_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`;
+    //FORCAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key}`;
+    
+
+  fetch(WEATHR_API_URL)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("todays weather", data);
+      let date = new Date();
+      todayTempC = (data.main.temp - 273.15).toFixed(0);
+    
+      //Update current  weather UI section
+        displayWeatherDashbord({
+        tempC: todayTempC,
+        desc: data.weather[0].description,
+        icon: data.weather[0].icon,
+        wind: data.wind.speed,
+        humidity: data.main.humidity,
+        selectedDate: date,
+      });
+    
     })
     .catch(() => {
       alert(`fail to feth current Weather`);
     });
+
+
+
+
 }
+
 
 // =================================================================================================================================
 //=================================================take out city details & coordinates=====================================
@@ -156,6 +238,8 @@ locationBtn.addEventListener("click", () => {
 
           const { name, country, state } = data[0];
           console.log(data);
+           console.log(data[0]);
+
           saveCity(name);
           getWeatherDetails(name, lat, lon, country, state);//display weather details
          
@@ -169,7 +253,7 @@ locationBtn.addEventListener("click", () => {
 
 
 
-///-----------------------------dropdown menu------------------
+///-----------------------------------------dropdown menu------------------
 // SHOW dropdown
 
 function showDropdown() {
@@ -179,7 +263,6 @@ function showDropdown() {
     inputDropdownBox.classList.add("opacity-100", "scale-y-100");
   }, 10);
 }
-
 // HIDE dropdown
 function hideDropdown() {
   inputDropdownBox.classList.remove("opacity-100", "scale-y-100");
@@ -233,14 +316,7 @@ function renderDropdown() {
 }
 
 
-//Save Recent Citys in local storage
-
-
-
-
-
-
-
+//// Save Recent Citys in local storage
 function saveCity(city) {
   // Remove duplicate
   recentCities = recentCities.filter(c => c.toLowerCase() !== city.toLowerCase());

@@ -14,7 +14,7 @@
     />
   </head>
   <body
-    class="min-h-screen bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-400 flex flex-col items-center "
+    class="min-h-screen bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-400 flex flex-col items-center"
   >
     <!-- //1// Header //////////-->
     <header
@@ -28,32 +28,52 @@
       <!--=2.1========== dashbord secrtion ========== -->
       <div class="flex flex-col md:flex-row gap-6">
         <!-- 2.1.1------- Search Section ------- -->
-        <div class="w-full md:w-2/5 bg-white/20 backdrop-blur-lg mx-auto p-3 md:p-6 rounded-2xl shadow-xl text-white">
-          <h2 class="text-lg font-semibold mb-4">Search City</h2>
+        <div
+          class=" relative w-full md:w-2/5 bg-white/20 backdrop-blur-lg mx-auto p-3 md:p-6 rounded-2xl shadow-xl text-white"
+        >
+          <h2 class="text-lg font-semibold mb-2">Search City</h2>
 
           <div class="flex gap-3">
             <input
               id="city_Input"
               type="text"
               placeholder="Enter city..."
-              class=" flex-1 px-4 md:px-1 py-2 rounded-xl bg-white/30 placeholder-white text-white focus:outline-none focus:ring-2 focus:ring-white "
+              class="flex-1 px-4 md:px-1 py-2 rounded-xl bg-white/30 placeholder-white text-white focus:outline-none focus:ring-2 focus:ring-white"
             />
-            <button id="search_Btn" class="bg-white text-blue-600 px-4 rounded-xl font-medium hover:bg-blue-100 transition">
+            <button
+              id="search_Btn"
+              class="bg-white text-blue-600 px-4 rounded-xl font-medium hover:bg-blue-100 transition"
+            >
               <i class="ri-search-line text-xl"></i>
             </button>
           </div>
-
-          <div class="my-2 flex  items-center ">
+          <!-- -----input Dropdown Box------- -->
+          <div class="inputDropdownBox hidden overflow-auto w-9/12 max-h-2/6 ml-1 mt-1 p-2 mr-auto bg-indigo-300 rounded-2xl absolute">
+            <div
+              class=" dopDownCard hover:cursor-pointer mb-0.5 px-4 text-center md:px-1 py-1 rounded-xl bg-indigo-400 "
+            >
+              singapore
+            </div>
+          </div>
+          <div class="my-2 flex items-center">
             <div class="ml-4 grow border-t border-white/40"></div>
             <span class="mx-4 text-sm opacity-70">OR</span>
-            <div class=" mr-4 grow border-t border-white/40"></div>
+            <div class="mr-4 grow border-t border-white/40"></div>
           </div>
 
-          <button class="w-full bg-white/30 py-2 rounded-xl hover:bg-white/40 transition">Use Current Location</button>
+          <button
+            id="locationBtn"
+            class="w-full bg-white/30 py-2 rounded-xl hover:bg-white/40 transition"
+          >
+            Use Current Location
+          </button>
         </div>
 
         <!-- 2.1.2 --------Current Weather Card---- -->
-        <div id="currentWeather" class="w-full md:w-3/5 bg-white/20 backdrop-blur-xl text-white rounded-3xl shadow-2xl p-6 ">
+        <div
+          id="currentWeather"
+          class="w-full md:w-3/5 bg-white/20 backdrop-blur-xl text-white rounded-3xl shadow-2xl p-6"
+        >
           <!-- Date Row -->
           <div class="flex justify-between text-sm opacity-80 mb-6">
             <span>27August,2025</span>
@@ -62,32 +82,54 @@
           </div>
 
           <!-- Middle Section -->
-          <div class="flex items-center justify-between ">
+          <div class="flex items-center justify-between">
             <!-- Left -->
-            <div class="w-1/2 ">
-              <p class="uppercase text-sm opacity-80 ">Thunderstorm</p>
+            <div class="w-1/2">
+              <p class="uppercase text-sm opacity-80">Thunderstorm</p>
 
-              <h1 class="text-5xl md:text-6xl font-light mt-2">
-                19°<span class="text-xl ">C</span>
-                <span class="text-lg md:text-2xl"> / 66°F</span>
+              <h1 class="text-5xl md:text-6xl flex flex-col justify-center items-center  font-light mt-2">
+                <span class="tempVar">
+                  10°<sup class="text-3xl font-medium">C</sup></span
+                >
+                <span class="text-lg md:text-2xl">
+                  <div
+                    id="toggle"
+                    class="w-20 h-10 bg-gray-300 rounded-full relative border-2 border-purple-600 cursor-pointer transition duration-300"
+                  >
+                    <div
+                      id="circle"
+                      class="w-8 h-8 bg-white text-center rounded-full absolute top-1 left-11 transition-all duration-300 shadow-md"
+                    >
+                      <span id="statusText" class="text-gray-400 font-semibold"
+                        >°F</span
+                      >
+                    </div>
+                  </div>
+                </span>
               </h1>
 
-              <div class=" mt-4 space-y-1 text-sm">
-                <p>🌬 Wind: 4-5 m/s</p>
-                <p>💧 Humidity: 40%</p>
+              <div class="mt-4 space-y-1 text-sm">
+                <p> Wind: 4-5 m/s 💨</p>
+                <p>Humidity: 40% 💧</p>
               </div>
             </div>
 
             <!-- Right -->
             <div class="w-1/2 flex flex-col items-center">
-              <div class="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center ">
-                <img class="w-full h-full object-contain drop-shadow-lg " src=" https://openweathermap.org/img/wn/50n@2x.png" alt="Weather Icon" />
+              <div
+                class="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center"
+              >
+                <img
+                  class="w-full h-full object-contain drop-shadow-lg"
+                  src=" https://openweathermap.org/img/wn/50n@2x.png"
+                  alt="Weather Icon"
+                />
               </div>
 
               <div class="text-center mt-3">
                 <p class="text-xl md:text-2xl font-semibold">London</p>
                 <p class="text-sm opacity-80">
-                  <span>washington</span>,<span class="uppercase ">uk</span>
+                  <span>washington</span>,<span class="uppercase">uk</span>
                 </p>
               </div>
             </div>
@@ -100,14 +142,16 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <!-- Forecast Cards -->
         <!-- ~~~~~ Day 1 ~~~~ -->
-        <div class="bg-white/20 flex items-center justify-around md:grid grid-cols-2 lg:block backdrop-blur-lg rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg">
-          <p class="text-sm col-span-2 md:text-xl opacity-80 ">THU</p>
-          <p class="text-3xl md:text-4xl col-span-2 my-2 ">⛈️</p>
+        <div
+          class="bg-white/20 flex items-center justify-around md:grid grid-cols-2 lg:block backdrop-blur-lg rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg"
+        >
+          <p class="text-sm col-span-2 md:text-xl opacity-80">THU</p>
+          <p class="text-3xl md:text-4xl col-span-2 my-2">⛈️</p>
           <p class="text-sm">27°C</p>
           <p class="text-xs opacity-70">Wind 4 m/s</p>
         </div>
         <!-- ~~~~~ Day 2 ~~~~ -->
-        
+
         <!-- ~~~~~ Day 3 ~~~~ -->
 
         <!-- ~~~~~ Day 4 ~~~~ -->
@@ -116,6 +160,6 @@
       </div>
     </div>
 
-    <script src="weather.js"></script>
+    <script type="module" src="weather.js"></script>
   </body>
 </html>

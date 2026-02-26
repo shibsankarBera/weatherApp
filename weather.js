@@ -4,43 +4,43 @@ const cityInput = document.getElementById("city_Input"),
   searchBtn = document.getElementById("search_Btn"),
   locationBtn = document.getElementById("locationBtn"),
   api_key = API_key,
-  currentWeatherCard = document.getElementById("currentWeather");
-   let inputDropdownBox=document.querySelector(".inputDropdownBox")
+  currentWeatherCard = document.getElementById("currentWeather"),
+ forecastcontainer = document.getElementById("Forecast-container");
+let inputDropdownBox = document.querySelector(".inputDropdownBox");
+console.log("API KEY:", api_key);
 
-   // ==============================================    STATE/DATA  ============================================================
-  let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
- let days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saurday",
-    ],
-    months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sept",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-  let isCelsius = true;
-let todayTempC = null;  
+// ==============================================    STATE/DATA  ============================================================
+let recentCities = JSON.parse(localStorage.getItem("recentCities")) || [];
+const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saurday",
+  ],
+  months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ], daysShort = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+let isCelsius = true;
+let todayTempC = null;
 let searchedPlace = {
   name: "",
   state: "",
   country: "",
 };
-
-
 
 // ================================================ UTILITIES & HELPER FUNCTIONS =============================================
 ///---------Celcious To Farenhite toogleButton-----
@@ -69,7 +69,7 @@ function toggleTodayTemp() {
 }
 
 // =============================================  UI FUNCTIONS ===============================================
-        //DASHBOARD UI UPDATE
+//--------------------DASHBOARD UI UPDATE-----------------
 function displayWeatherDashbord({
   tempC,
   desc,
@@ -81,8 +81,8 @@ function displayWeatherDashbord({
   const date = new Date(selectedDate);
   const now = new Date();
   const isToday = now.getDate() === date.getDate();
- 
-   currentWeatherCard.innerHTML = `
+
+  currentWeatherCard.innerHTML = `
           <!-- Date Row -->
           <div class="flex justify-between text-sm opacity-80 mb-6">
             <span>${date.getDate()}th${months[date.getMonth()]} ,${date.getFullYear()} </span>
@@ -133,8 +133,8 @@ function displayWeatherDashbord({
               </div>
 
               ${
-                
-                searchedPlace.name  ? `<div class="text-center mt-3">
+                searchedPlace.name
+                  ? `<div class="text-center mt-3">
                 <p class="text-xl md:text-2xl font-semibold">${searchedPlace.name}</p>
                 <p class="text-sm opacity-80"><span>${searchedPlace.state || ""}</span>,<span class="uppercase">${searchedPlace.country || ""}</span></p>
               </div>`
@@ -143,19 +143,51 @@ function displayWeatherDashbord({
             </div>
           </div>`;
 
- 
   if (isToday) {
     const toggle = document.getElementById("toggle");
     toggle.addEventListener("click", toggleTodayTemp);
   }
 }
 
-//-----------------------------------------------feth & displyaying weather Details---------------------
+//----------DYNAMIC 5 FORECAST CARDS-----
+function displayFocastCards(fiveDayFor) {
+  forecastcontainer.innerHTML = "";
+  const daysToShow=fiveDayFor.length>5? fiveDayFor.slice(1):fiveDayFor
+
+  daysToShow.forEach((day) => {
+    const date = new Date(day.dt_txt),
+      now = new Date(),
+      displayDate=now.getDate() === date.getDate() ? "Today" : `${date.getDate()}${months[date.getMonth()]}`
+    const tempC = (day.main.temp - 273.15).toFixed(0);
+
+    forecastcontainer.innerHTML += `
+    <div class="day-card bg-white/20 flex items-center justify-around md:grid grid-cols-2 backdrop-blur-lg rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg"
+      data-temp="${tempC}"
+      data-desc="${day.weather[0].description}"
+      data-icon="${day.weather[0].icon}"
+      data-wind="${day.wind.speed}"
+      data-humidity="${day.main.humidity}"
+      data-date="${day.dt_txt}">
+
+      <p class="text-sm md:text-xl opacity-80">${daysShort[date.getDay()]}</p>
+      <p class="text-sm md:text-xl opacity-80">${displayDate}</p>
+
+      <div class="col-span-2 flex justify-center items-center">
+        <img class="w-10 h-10"
+          src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"/>
+      </div>
+
+      <p class="text-sm">${tempC}°c</p>
+      <p class="text-xs opacity-70">💨 ${day.wind.speed} m/s</p>
+    </div>`;
+  });
+}
+
+//==================================================== WEATHER FETCH ========================================
 function getWeatherDetails(name, lat, lon, country, state) {
-  searchedPlace = { name, state, country }; 
-  let WEATHR_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`;
-    //FORCAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key}`;
-    
+  searchedPlace = { name, state, country };
+  let WEATHR_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`,
+  FORCAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key}`;
 
   fetch(WEATHR_API_URL)
     .then((res) => res.json())
@@ -163,9 +195,9 @@ function getWeatherDetails(name, lat, lon, country, state) {
       console.log("todays weather", data);
       let date = new Date();
       todayTempC = (data.main.temp - 273.15).toFixed(0);
-    
+
       //Update current  weather UI section
-        displayWeatherDashbord({
+      displayWeatherDashbord({
         tempC: todayTempC,
         desc: data.weather[0].description,
         icon: data.weather[0].icon,
@@ -173,30 +205,35 @@ function getWeatherDetails(name, lat, lon, country, state) {
         humidity: data.main.humidity,
         selectedDate: date,
       });
-    
     })
     .catch(() => {
       alert(`fail to feth current Weather`);
     });
-
-
-
-
+    //////Fetch 5 day forcast data
+  fetch(FORCAST_API_URL)
+    .then((res) => res.json())
+    .then((data) => {
+      const uniqueDays = [];
+      const fiveDay = data.list.filter((item) => {
+        const day = new Date(item.dt_txt).getDate();
+        if (!uniqueDays.includes(day)) {
+          uniqueDays.push(day);
+          return true;
+        }
+      });
+      displayFocastCards(fiveDay);
+    });
 }
-
 
 // =================================================================================================================================
 //=================================================take out city details & coordinates=====================================
 
+searchBtn.addEventListener("click", getcityInput); ////acces city by search button
 
-
-
-searchBtn.addEventListener("click", getcityInput);  ////acces city by search button
-
-cityInput.addEventListener("keypress", (e)=> {
-  if(e.key=="Enter"){
-    console.log(e.key)
-    getcityInput();                              ////acess city by press "enter" button
+cityInput.addEventListener("keypress", (e) => {
+  if (e.key == "Enter") {
+    console.log(e.key);
+    getcityInput(); ////acess city by press "enter" button
   }
 });
 ///////////////getcity inoromation (Geocoding cityName to cordinate)/////////
@@ -207,7 +244,7 @@ function getcityInput() {
   cityInput.value = "";
 
   fetch(
-    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${api_key}`,
+    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${api_key}`
   )
     .then((res) => res.json())
     .then((data) => {
@@ -215,8 +252,8 @@ function getcityInput() {
 
       const { name, lat, lon, country, state } = data[0];
       console.log(data);
-      getWeatherDetails(name, lat, lon, country, state);//display weather details
-       saveCity(name);
+      getWeatherDetails(name, lat, lon, country, state); //display weather details
+      saveCity(name);
     })
     .catch(() => alert("Failed to fetch city data."));
 }
@@ -238,11 +275,10 @@ locationBtn.addEventListener("click", () => {
 
           const { name, country, state } = data[0];
           console.log(data);
-           console.log(data[0]);
+          console.log(data[0]);
 
           saveCity(name);
-          getWeatherDetails(name, lat, lon, country, state);//display weather details
-         
+          getWeatherDetails(name, lat, lon, country, state); //display weather details
         })
         .catch(() => alert("Failed to fetch location data."));
     },
@@ -250,10 +286,7 @@ locationBtn.addEventListener("click", () => {
   );
 });
 
-
-
-
-///-----------------------------------------dropdown menu------------------
+///========================================================dropdown menu==============================
 // SHOW dropdown
 
 function showDropdown() {
@@ -273,28 +306,22 @@ function hideDropdown() {
   }, 200); // match transition duration
 }
 
-
-cityInput.addEventListener("focusin",()=>{
-  if(recentCities.length!==0){
+cityInput.addEventListener("focusin", () => {
+  if (recentCities.length !== 0) {
     showDropdown();
   }
-} );// Focus in → show
+}); // Focus in → show
 // Click outside → hide
 document.addEventListener("click", (e) => {
-  if (
-    !cityInput.contains(e.target) &&
-    !inputDropdownBox.contains(e.target)
-  ) {
+  if (!cityInput.contains(e.target) && !inputDropdownBox.contains(e.target)) {
     hideDropdown();
   }
 });
 
-
-
 //load recent from localStorage on dropDownbox
 function renderDropdown() {
   inputDropdownBox.innerHTML = "";
- if(!recentCities){
+  if (!recentCities) {
     hideDropdown();
   }
   recentCities.forEach((city) => {
@@ -308,18 +335,19 @@ function renderDropdown() {
       cityInput.value = city;
       getcityInput();
       hideDropdown();
-       console.log(city,":clicked")
+      console.log(city, ":clicked");
     });
 
     inputDropdownBox.appendChild(div);
   });
 }
 
-
 //// Save Recent Citys in local storage
 function saveCity(city) {
   // Remove duplicate
-  recentCities = recentCities.filter(c => c.toLowerCase() !== city.toLowerCase());
+  recentCities = recentCities.filter(
+    (c) => c.toLowerCase() !== city.toLowerCase(),
+  );
 
   // Add to top
   recentCities.unshift(city);
@@ -333,4 +361,3 @@ function saveCity(city) {
   renderDropdown();
 }
 renderDropdown();
-

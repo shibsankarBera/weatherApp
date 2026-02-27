@@ -5,7 +5,7 @@ const cityInput = document.getElementById("city_Input"),
   locationBtn = document.getElementById("locationBtn"),
   api_key = API_key,
   currentWeatherCard = document.getElementById("currentWeather"),
- forecastcontainer = document.getElementById("Forecast-container");
+  forecastcontainer = document.getElementById("Forecast-container");
 let inputDropdownBox = document.querySelector(".inputDropdownBox");
 console.log("API KEY:", api_key);
 
@@ -18,7 +18,7 @@ const days = [
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saurday",
+    "Saturday",
   ],
   months = [
     "Jan",
@@ -33,7 +33,8 @@ const days = [
     "Oct",
     "Nov",
     "Dec",
-  ], daysShort = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  ],
+  daysShort = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 let isCelsius = true;
 let todayTempC = null;
 let searchedPlace = {
@@ -67,6 +68,20 @@ function toggleTodayTemp() {
     isCelsius = true;
   }
 }
+//hilights focast cards
+ function cardHighlite(card){
+  // Remove highlight from old card 
+   document
+    .querySelectorAll(".day-card")
+    .forEach((c) => c.classList.remove("ring-4", "ring-white"));
+  document.addEventListener("click", (e) => {
+    if (!forecastcontainer.contains(e.target)) {
+      card.classList.remove("ring-4", "ring-white");
+    }
+  });
+  // Highlight selected card
+  card.classList.add("ring-4", "ring-white");
+ }
 
 // =============================================  UI FUNCTIONS ===============================================
 //--------------------DASHBOARD UI UPDATE-----------------
@@ -78,15 +93,16 @@ function displayWeatherDashbord({
   humidity,
   selectedDate,
 }) {
-  const date = new Date(selectedDate);
+  let date = new Date(selectedDate),
+  day="";
   const now = new Date();
   const isToday = now.getDate() === date.getDate();
-
+isToday?(date=now,day="ToDay"):date;
   currentWeatherCard.innerHTML = `
           <!-- Date Row -->
           <div class="flex justify-between text-sm opacity-80 mb-6">
             <span>${date.getDate()}th${months[date.getMonth()]} ,${date.getFullYear()} </span>
-            <span>${days[date.getDay()]}</span>
+            <span>${day||days[date.getDay()]}</span>
             <span>${date.getHours() % 12 || 12}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"}</span>
           </div>
 
@@ -149,15 +165,20 @@ function displayWeatherDashbord({
   }
 }
 
-//----------DYNAMIC 5 FORECAST CARDS-----
+//----------DYNAMIC UI 5 FORECAST CARDS-----
 function displayFocastCards(fiveDayFor) {
   forecastcontainer.innerHTML = "";
-  const daysToShow=fiveDayFor.length>5? fiveDayFor.slice(1):fiveDayFor
+  const daysToShow =
+    fiveDayFor.length > 5 ? fiveDayFor.slice(0, 5) : fiveDayFor;
+  console.log(daysToShow);
 
   daysToShow.forEach((day) => {
     const date = new Date(day.dt_txt),
       now = new Date(),
-      displayDate=now.getDate() === date.getDate() ? "Today" : `${date.getDate()}${months[date.getMonth()]}`
+      displayDate =
+        now.getDate() === date.getDate()
+          ? "Today"
+          : `${date.getDate()}${months[date.getMonth()]}`;
     const tempC = (day.main.temp - 273.15).toFixed(0);
 
     forecastcontainer.innerHTML += `
@@ -182,12 +203,37 @@ function displayFocastCards(fiveDayFor) {
     </div>`;
   });
 }
+//----------rendering each forcast card 1by1 to dashbord UI----------
+forecastcontainer.addEventListener("click", (e) => {
+  const card = e.target.closest(".day-card");
+  if (!card) return;
+ cardHighlite(card);//hilight cards
+ // Get data from clicked card
+    const tempC = card.dataset.temp;
+    const desc = card.dataset.desc;
+    const icon = card.dataset.icon;
+    const wind = card.dataset.wind;
+    const humidity = card.dataset.humidity;
+    const Date = card.dataset.date;
+    console.log(tempC,desc,icon,wind,humidity,Date)
+    displayWeatherDashbord({
+  tempC,
+  desc,
+  icon,
+  wind,
+  humidity,
+  selectedDate:Date,
+})
+
+
+  console.log(card);
+});
 
 //==================================================== WEATHER FETCH ========================================
 function getWeatherDetails(name, lat, lon, country, state) {
   searchedPlace = { name, state, country };
   let WEATHR_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`,
-  FORCAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key}`;
+    FORCAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key}`;
 
   fetch(WEATHR_API_URL)
     .then((res) => res.json())
@@ -209,7 +255,7 @@ function getWeatherDetails(name, lat, lon, country, state) {
     .catch(() => {
       alert(`fail to feth current Weather`);
     });
-    //////Fetch 5 day forcast data
+  //////Fetch 5 day forcast data
   fetch(FORCAST_API_URL)
     .then((res) => res.json())
     .then((data) => {
@@ -244,7 +290,7 @@ function getcityInput() {
   cityInput.value = "";
 
   fetch(
-    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${api_key}`
+    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${api_key}`,
   )
     .then((res) => res.json())
     .then((data) => {

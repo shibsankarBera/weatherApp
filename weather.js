@@ -69,9 +69,9 @@ function toggleTodayTemp() {
   }
 }
 //hilights focast cards
- function cardHighlite(card){
-  // Remove highlight from old card 
-   document
+function cardHighlite(card) {
+  // Remove highlight from old card
+  document
     .querySelectorAll(".day-card")
     .forEach((c) => c.classList.remove("ring-4", "ring-white"));
   document.addEventListener("click", (e) => {
@@ -81,7 +81,28 @@ function toggleTodayTemp() {
   });
   // Highlight selected card
   card.classList.add("ring-4", "ring-white");
- }
+}
+//weather alert Box
+//let temppp=35;
+function weatherAlert(temppp){
+   let message=" ",bgColor=""
+ const weatherAlertBox=document.createElement("div");
+   //weatherAlertBox.classList.add("block")
+  if(temppp>30){
+ message="its too 🔥🥵"
+ bgColor="bg-red-600"
+  }else if(temppp<10){
+    message="its too ❄🥶"
+   bgColor="bg-blue-600"
+  }else{
+    //weatherAlertBox.classList.add("hidden")
+  }
+weatherAlertBox.innerHTML=`${message}`
+    weatherAlertBox.className=`w-40 h-10 text-2xl absolute top-14 right-6 md:right-12 lg:right-40 animate-pulse rounded-bl-3xl rounded-tr-3xl text-center  ${bgColor} `
+    currentWeatherCard.appendChild(weatherAlertBox)
+}
+
+//dashboard codiotional background
 
 // =============================================  UI FUNCTIONS ===============================================
 //--------------------DASHBOARD UI UPDATE-----------------
@@ -93,16 +114,17 @@ function displayWeatherDashbord({
   humidity,
   selectedDate,
 }) {
+ 
   let date = new Date(selectedDate),
-  day="";
+    day = "";
   const now = new Date();
   const isToday = now.getDate() === date.getDate();
-isToday?(date=now,day="ToDay"):date;
+  isToday ? ((date = now), (day = "ToDay")) : date;
   currentWeatherCard.innerHTML = `
           <!-- Date Row -->
           <div class="flex justify-between text-sm opacity-80 mb-6">
             <span>${date.getDate()}th${months[date.getMonth()]} ,${date.getFullYear()} </span>
-            <span>${day||days[date.getDay()]}</span>
+            <span>${day || days[date.getDay()]}</span>
             <span>${date.getHours() % 12 || 12}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"}</span>
           </div>
 
@@ -158,7 +180,7 @@ isToday?(date=now,day="ToDay"):date;
               }
             </div>
           </div>`;
-
+ weatherAlert(tempC);
   if (isToday) {
     const toggle = document.getElementById("toggle");
     toggle.addEventListener("click", toggleTodayTemp);
@@ -207,24 +229,23 @@ function displayFocastCards(fiveDayFor) {
 forecastcontainer.addEventListener("click", (e) => {
   const card = e.target.closest(".day-card");
   if (!card) return;
- cardHighlite(card);//hilight cards
- // Get data from clicked card
-    const tempC = card.dataset.temp;
-    const desc = card.dataset.desc;
-    const icon = card.dataset.icon;
-    const wind = card.dataset.wind;
-    const humidity = card.dataset.humidity;
-    const Date = card.dataset.date;
-    console.log(tempC,desc,icon,wind,humidity,Date)
-    displayWeatherDashbord({
-  tempC,
-  desc,
-  icon,
-  wind,
-  humidity,
-  selectedDate:Date,
-})
-
+  cardHighlite(card); //hilight cards
+  // Get data from clicked card
+  const tempC = card.dataset.temp;
+  const desc = card.dataset.desc;
+  const icon = card.dataset.icon;
+  const wind = card.dataset.wind;
+  const humidity = card.dataset.humidity;
+  const Date = card.dataset.date;
+  console.log(tempC, desc, icon, wind, humidity, Date);
+  displayWeatherDashbord({
+    tempC,
+    desc,
+    icon,
+    wind,
+    humidity,
+    selectedDate: Date,
+  });
 
   console.log(card);
 });

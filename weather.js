@@ -42,6 +42,7 @@ let searchedPlace = {
   state: "",
   country: "",
 };
+let condition=""
 
 // ================================================ UTILITIES & HELPER FUNCTIONS =============================================
 ///---------Celcious To Farenhite toogleButton-----
@@ -83,19 +84,15 @@ function cardHighlite(card) {
   card.classList.add("ring-4", "ring-white");
 }
 //weather alert Box
-//let temppp=35;
 function weatherAlert(temppp){
    let message=" ",bgColor=""
  const weatherAlertBox=document.createElement("div");
-   //weatherAlertBox.classList.add("block")
   if(temppp>30){
  message="its too 🔥🥵"
  bgColor="bg-red-600"
   }else if(temppp<10){
     message="its too ❄🥶"
    bgColor="bg-blue-600"
-  }else{
-    //weatherAlertBox.classList.add("hidden")
   }
 weatherAlertBox.innerHTML=`${message}`
     weatherAlertBox.className=`w-40 h-10 text-2xl absolute top-14 right-6 md:right-12 lg:right-40 animate-pulse rounded-bl-3xl rounded-tr-3xl text-center  ${bgColor} `
@@ -103,6 +100,41 @@ weatherAlertBox.innerHTML=`${message}`
 }
 
 //dashboard codiotional background
+function changeWeatherBackground(condition) {
+  const video = document.getElementById("bgVideo");
+
+   video.pause()
+  switch (condition) {
+
+    case "Clear":
+      video.src = "/dist/clear.mp4";
+      break;
+
+    case "Clouds":
+      video.src = "/dist/clouds.mp4";
+      break;
+
+    case "Rain":
+      video.src = "/dist/rain.mp4";
+      break;
+
+    case "Thunderstorm":
+      video.src = "/dist/thunder.mp4";
+      break;
+
+    case "Snow":
+      video.src = "/dist/snow.mp4";
+      break;
+    default:
+      video.src="/dist/defaultWind.mp4"
+  }
+  console.log(video);
+  video.load();
+  
+}
+//let condition="Clear"
+changeWeatherBackground(condition);
+console.log("condition",condition)
 
 // =============================================  UI FUNCTIONS ===============================================
 //--------------------DASHBOARD UI UPDATE-----------------
@@ -114,7 +146,6 @@ function displayWeatherDashbord({
   humidity,
   selectedDate,
 }) {
- 
   let date = new Date(selectedDate),
     day = "";
   const now = new Date();
@@ -180,11 +211,12 @@ function displayWeatherDashbord({
               }
             </div>
           </div>`;
- weatherAlert(tempC);
+ weatherAlert(tempC); ////custom weather alert
   if (isToday) {
     const toggle = document.getElementById("toggle");
     toggle.addEventListener("click", toggleTodayTemp);
   }
+  changeWeatherBackground(condition);
 }
 
 //----------DYNAMIC UI 5 FORECAST CARDS-----
@@ -204,13 +236,14 @@ function displayFocastCards(fiveDayFor) {
     const tempC = (day.main.temp - 273.15).toFixed(0);
 
     forecastcontainer.innerHTML += `
-    <div class="day-card bg-white/20 flex items-center justify-around md:grid grid-cols-2 backdrop-blur-lg rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg"
+    <div class="day-card bg-white/20 flex items-center justify-around md:grid grid-cols-2 backdrop-blur-sm rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg"
       data-temp="${tempC}"
       data-desc="${day.weather[0].description}"
       data-icon="${day.weather[0].icon}"
       data-wind="${day.wind.speed}"
       data-humidity="${day.main.humidity}"
-      data-date="${day.dt_txt}">
+      data-date="${day.dt_txt}"
+      data-condition="${day.weather[0].main}">
 
       <p class="text-sm md:text-xl opacity-80">${daysShort[date.getDay()]}</p>
       <p class="text-sm md:text-xl opacity-80">${displayDate}</p>
@@ -237,7 +270,8 @@ forecastcontainer.addEventListener("click", (e) => {
   const wind = card.dataset.wind;
   const humidity = card.dataset.humidity;
   const Date = card.dataset.date;
-  console.log(tempC, desc, icon, wind, humidity, Date);
+      condition=card.dataset.condition;
+  console.log(tempC, desc, icon, wind, humidity, Date,);
   displayWeatherDashbord({
     tempC,
     desc,
@@ -262,6 +296,7 @@ function getWeatherDetails(name, lat, lon, country, state) {
       console.log("todays weather", data);
       let date = new Date();
       todayTempC = (data.main.temp - 273.15).toFixed(0);
+      condition=data.weather[0].main;
 
       //Update current  weather UI section
       displayWeatherDashbord({

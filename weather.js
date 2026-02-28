@@ -136,6 +136,31 @@ function changeWeatherBackground(condition) {
 changeWeatherBackground(condition);
 console.log("condition",condition)
 
+////Custom Error alert Box
+function customAlert(message) {
+  const alertBtn = document.getElementById("alertBtn");
+  const alertBox = document.getElementById("alertBox");
+  const alertMessage = document.getElementById("alertMessage");
+
+  // Show alert
+  alertBox.classList.remove("hidden");
+  alertBox.classList.add("block");
+  alertMessage.textContent = message;
+
+  // Auto close after 4s
+  const timer = setTimeout(() => {
+    alertBox.classList.add("hidden");
+  }, 4000);
+
+  // Close on button click
+  alertBtn.onclick = function () {
+    alertBox.classList.add("hidden");
+    clearTimeout(timer); // stop auto close if user clicks
+  };
+}
+
+//customAlert("Error occurred!");
+
 // =============================================  UI FUNCTIONS ===============================================
 //--------------------DASHBOARD UI UPDATE-----------------
 function displayWeatherDashbord({
@@ -253,7 +278,7 @@ function displayFocastCards(fiveDayFor) {
           src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"/>
       </div>
 
-      <p class="text-sm">${tempC}°c</p>
+      <p class="text-sm">🌡${tempC}°c</p>
       <p class="text-xs opacity-70">💨 ${day.wind.speed} m/s</p>
     </div>`;
   });
@@ -271,7 +296,7 @@ forecastcontainer.addEventListener("click", (e) => {
   const humidity = card.dataset.humidity;
   const Date = card.dataset.date;
       condition=card.dataset.condition;
-  console.log(tempC, desc, icon, wind, humidity, Date,);
+ // console.log(tempC, desc, icon, wind, humidity, Date,);
   displayWeatherDashbord({
     tempC,
     desc,
@@ -281,7 +306,7 @@ forecastcontainer.addEventListener("click", (e) => {
     selectedDate: Date,
   });
 
-  console.log(card);
+  //console.log(card);
 });
 
 //==================================================== WEATHER FETCH ========================================
@@ -309,7 +334,7 @@ function getWeatherDetails(name, lat, lon, country, state) {
       });
     })
     .catch(() => {
-      alert(`fail to feth current Weather`);
+      customAlert(`fail to feth current Weather`);
     });
   //////Fetch 5 day forcast data
   fetch(FORCAST_API_URL)
@@ -324,6 +349,8 @@ function getWeatherDetails(name, lat, lon, country, state) {
         }
       });
       displayFocastCards(fiveDay);
+    }) .catch(() => {
+      customAlert(`fail to feth forcast data`);
     });
 }
 
@@ -341,7 +368,7 @@ cityInput.addEventListener("keypress", (e) => {
 ///////////////getcity inoromation (Geocoding cityName to cordinate)/////////
 function getcityInput() {
   const city = cityInput.value.trim();
-  if (!city) return alert("Enter a city name.");
+  if (!city) return customAlert("Enter a city name.");
 
   cityInput.value = "";
 
@@ -350,19 +377,19 @@ function getcityInput() {
   )
     .then((res) => res.json())
     .then((data) => {
-      if (!data.length) return alert("City not found.");
+      if (!data.length) return customAlert("City not found.");
 
       const { name, lat, lon, country, state } = data[0];
       console.log(data);
       getWeatherDetails(name, lat, lon, country, state); //display weather details
       saveCity(name);
     })
-    .catch(() => alert("Failed to fetch city data."));
+    .catch(() => customAlert("Failed to fetch city data."));
 }
 
 // ///////////////getcity inoromation by USE CURRENT LOCATION(revers Geocoding city name to cordinate)
 locationBtn.addEventListener("click", () => {
-  if (!navigator.geolocation) return alert("Geolocation not supported.");
+  if (!navigator.geolocation) return customAlert("Geolocation not supported.");
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
@@ -373,7 +400,7 @@ locationBtn.addEventListener("click", () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          if (!data.length) return alert("Location not found.");
+          if (!data.length) return customAlert("Location not found.");
 
           const { name, country, state } = data[0];
           console.log(data);
@@ -382,9 +409,9 @@ locationBtn.addEventListener("click", () => {
           saveCity(name);
           getWeatherDetails(name, lat, lon, country, state); //display weather details
         })
-        .catch(() => alert("Failed to fetch location data."));
+        .catch(() => customAlert("Failed to fetch location data."));
     },
-    () => alert("Location access denied."),
+    () => customAlert("Location access denied."),
   );
 });
 

@@ -134,7 +134,7 @@ function changeWeatherBackground(condition) {
 }
 //let condition="Clear"
 changeWeatherBackground(condition);
-console.log("condition",condition)
+//console.log("condition",condition)
 
 ////Custom Error alert Box
 function customAlert(message) {
@@ -178,7 +178,7 @@ function displayWeatherDashbord({
   isToday ? ((date = now), (day = "ToDay")) : date;
   currentWeatherCard.innerHTML = `
           <!-- Date Row -->
-          <div class="flex justify-between text-sm opacity-80 mb-6">
+          <div class="flex justify-between text-sm   bg-slate-600/90 p-1.5 text-gray-300  opacity-80 mb-6">
             <span>${date.getDate()}th${months[date.getMonth()]} ,${date.getFullYear()} </span>
             <span>${day || days[date.getDay()]}</span>
             <span>${date.getHours() % 12 || 12}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"}</span>
@@ -261,7 +261,7 @@ function displayFocastCards(fiveDayFor) {
     const tempC = (day.main.temp - 273.15).toFixed(0);
 
     forecastcontainer.innerHTML += `
-    <div class="day-card bg-white/20 flex items-center justify-around md:grid grid-cols-2 backdrop-blur-sm rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg"
+    <div class="day-card flex items-center justify-around md:grid grid-cols-2  bg-slate-800/90 backdrop-blur-none border border-slate-600  rounded-2xl p-4 text-white text-center hover:scale-105 transition duration-300 shadow-lg"
       data-temp="${tempC}"
       data-desc="${day.weather[0].description}"
       data-icon="${day.weather[0].icon}"
